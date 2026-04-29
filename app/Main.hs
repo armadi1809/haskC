@@ -1,7 +1,8 @@
 module Main (main) where
 
 import System.Environment (getArgs)
-import System.Exit (exitFailure, exitSuccess)
+import System.Exit (exitFailure)
+import System.Process (callProcess)
 
 data DriverOptions = DriverOptions
   { srcFile :: Maybe FilePath,
@@ -9,6 +10,9 @@ data DriverOptions = DriverOptions
     upToParse :: Bool,
     upToCodeGen :: Bool
   }
+
+removeCExtension :: String -> String
+removeCExtension s = take (length s - 2) s
 
 defaultOptions :: DriverOptions
 defaultOptions = DriverOptions {srcFile = Nothing, upToParse = False, upToLex = False, upToCodeGen = False}
@@ -21,6 +25,15 @@ parseArgs opts (x : xs) = case x of
   "--codegen" -> parseArgs (opts {upToCodeGen = True}) xs
   _ -> if (take 1 x) == "-" then Left "Unknown flag" else parseArgs (opts {srcFile = Just x}) xs
 
+preprocess :: FilePath -> IO ()
+preprocess src = do
+  let outFile = (removeCExtension src) ++ ".i"
+  callProcess "gcc" ["-E", "-P", src, "-o", outFile]
+
+driver :: FilePath -> DriverOptions -> IO ()
+driver src _ = do
+  preprocess (src)
+
 main :: IO ()
 main = do
   args <- getArgs
@@ -32,4 +45,4 @@ main = do
       exitFailure
     Right ops -> case (srcFile ops) of
       Nothing -> putStrLn "Usage: haskC <file>"
-      Just _ -> exitSuccess
+      Just src -> driver src ops
