@@ -30,6 +30,11 @@ preprocess src = do
   let outFile = (removeCExtension src) ++ ".i"
   callProcess "gcc" ["-E", "-P", src, "-o", outFile]
 
+assemble :: FilePath -> IO ()
+assemble src = do
+  let outFile = (removeCExtension src)
+  callProcess "gcc" [src, "-o", outFile]
+
 driver :: FilePath -> DriverOptions -> IO ()
 driver src _ = do
   preprocess (src)
@@ -45,4 +50,7 @@ main = do
       exitFailure
     Right ops -> case (srcFile ops) of
       Nothing -> putStrLn "Usage: haskC <file>"
-      Just src -> driver src ops
+      Just src -> do
+        driver src ops
+        let assemblyF = (removeCExtension src) ++ ".s"
+        assemble assemblyF
