@@ -1,4 +1,4 @@
-module Lexer (lexer) where
+module Lexer (lexer, Token (..)) where
 
 import Data.Char
 
@@ -13,6 +13,7 @@ data Token
   | TokVoid
   | TokReturn
   | TokInt
+  deriving (Eq, Show)
 
 lexer :: String -> Either String [Token]
 lexer [] = Right []
