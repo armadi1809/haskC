@@ -9,7 +9,7 @@ convertExpression (ConstInt v) = Ass.Imm v
 convertStatement :: Ast.Statement -> [Ass.Instruction]
 convertStatement (Return e) =
   let v = convertExpression e
-   in [Ass.Mov v Ass.Register]
+   in [Ass.Mov v Ass.Register, Ass.Return]
 
 convertFunction :: Ast.FuncDef -> Ass.FuncDef
 convertFunction (Ast.Function name statement) = Ass.Function name (convertStatement statement)

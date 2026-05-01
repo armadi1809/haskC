@@ -9,7 +9,7 @@ showOperand Ass.Register = "%eax"
 emitInstruction :: FilePath -> Ass.Instruction -> IO ()
 emitInstruction assemblyFile inst = case inst of
   Ass.Mov op1 op2 -> appendFile assemblyFile ("\t" ++ "movl " ++ showOperand op1 ++ "," ++ showOperand op2 ++ "\n")
-  Ass.Return -> appendFile assemblyFile "ret\n"
+  Ass.Return -> appendFile assemblyFile "\tret\n"
 
 emitFunction :: FilePath -> Ass.FuncDef -> IO ()
 emitFunction assemblyFile (Ass.Function name instructions) = do
@@ -19,4 +19,6 @@ emitFunction assemblyFile (Ass.Function name instructions) = do
   mapM_ (emitInstruction assemblyFile) instructions
 
 emit :: FilePath -> Ass.Program -> IO ()
-emit assemblyFile (Ass.Program fnDef) = emitFunction assemblyFile fnDef
+emit assemblyFile (Ass.Program fnDef) = do
+  writeFile assemblyFile ""
+  emitFunction assemblyFile fnDef
