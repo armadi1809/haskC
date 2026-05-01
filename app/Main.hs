@@ -1,5 +1,6 @@
 module Main (main) where
 
+import Compile (compile)
 import System.Environment (getArgs)
 import System.Exit (exitFailure)
 import System.Process (callProcess)
@@ -38,6 +39,8 @@ assemble src = do
 driver :: FilePath -> DriverOptions -> IO ()
 driver src _ = do
   preprocess (src)
+  compile (removeCExtension src)
+  assemble src
 
 main :: IO ()
 main = do
@@ -50,7 +53,4 @@ main = do
       exitFailure
     Right ops -> case (srcFile ops) of
       Nothing -> putStrLn "Usage: haskC <file>"
-      Just src -> do
-        driver src ops
-        let assemblyF = (removeCExtension src) ++ ".s"
-        assemble assemblyF
+      Just src -> do driver src ops

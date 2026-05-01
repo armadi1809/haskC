@@ -28,6 +28,8 @@ library
       Assembly
       Ast
       Codegen
+      Compile
+      Emit
       Lexer
       Lib
       Parser
