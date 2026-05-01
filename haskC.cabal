@@ -25,7 +25,9 @@ source-repository head
 
 library
   exposed-modules:
+      Assembly
       Ast
+      Codegen
       Lexer
       Lib
       Parser
