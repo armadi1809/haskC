@@ -62,7 +62,9 @@ ident = Parser $ \input ->
     _ -> Nothing
 
 parseExp :: Parser Exp
-parseExp = ConstInt <$> int
+parseExp = Parser $ \input -> 
+  case input of
+    (TokInt)
 
 parseStatement :: Parser Statement
 parseStatement = do
