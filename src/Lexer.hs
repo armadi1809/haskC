@@ -13,6 +13,9 @@ data Token
   | TokVoid
   | TokReturn
   | TokInt
+  | TokTilde
+  | TokUnaryMinus
+  | TokDoubleMinus
   deriving (Eq, Show)
 
 lexer :: String -> Either String [Token]
@@ -35,4 +38,8 @@ lexer (c : cs)
   | c == '{' = (TokLeftBrace :) <$> lexer cs
   | c == '}' = (TokRightBrace :) <$> lexer cs
   | c == ';' = (TokSemiCol :) <$> lexer cs
+  | c == '-' = case (head cs) of
+      '-' -> (TokDoubleMinus :) <$> lexer (drop 1 cs)
+      _ -> (TokUnaryMinus :) <$> lexer cs
+  | c == '~' = (TokTilde :) <$> lexer cs
   | otherwise = Left ("Unexpected character: " ++ [c])
