@@ -1,6 +1,6 @@
-module Ast (Exp (..), Statement (..), FuncDef (..), Program (..)) where
+module Ast (Exp (..), Statement (..), FuncDef (..), Program (..), UnaryOp (..)) where
 
-data Exp = ConstInt Int
+data Exp = ConstInt Int | Unary UnaryOp Exp
   deriving (Eq, Show)
 
 data Statement = Return Exp
@@ -10,9 +10,6 @@ data FuncDef = Function String Statement
   deriving (Eq, Show)
 
 data UnaryOp = Complement | Negate
-  deriving (Eq, Show)
-
-data Unary = Unary UnaryOp Exp
   deriving (Eq, Show)
 
 data Program = Program FuncDef

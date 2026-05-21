@@ -62,9 +62,16 @@ ident = Parser $ \input ->
     _ -> Nothing
 
 parseExp :: Parser Exp
-parseExp = Parser $ \input -> 
+parseExp = Parser $ \input ->
   case input of
-    (TokInt)
+    (TokIntCst _ : _) -> runParser (ConstInt <$> int) input
+    (TokUnaryMinus : ts) -> runParser ((Unary Negate) <$> parseExp) ts
+    (TokTilde : ts) -> runParser ((Unary Complement) <$> parseExp) ts
+    (TokLeftParen : ts) -> do
+      (e, rest) <- runParser parseExp ts
+      (_, rest') <- runParser (symbol TokRightParen) rest
+      return (e, rest')
+    _ -> Nothing
 
 parseStatement :: Parser Statement
 parseStatement = do
