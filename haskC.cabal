@@ -33,6 +33,8 @@ library
       Lexer
       Lib
       Parser
+      Tacky
+      TackyGen
   other-modules:
       Paths_haskC
   autogen-modules:
