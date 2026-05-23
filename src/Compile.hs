@@ -1,6 +1,6 @@
 module Compile (compile) where
 
-import qualified Codegen as Cg
+import qualified Backend.Codegen as Cg
 import qualified Emit as Em
 import qualified Lexer as Lex
 import qualified Parser as Pars
